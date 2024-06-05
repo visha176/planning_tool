@@ -1,6 +1,8 @@
 streamlit
+streamlit-option-menu
 pandas
 numpy
 datetime
+io
 xlsxwriter
 openpyxl
