@@ -11,10 +11,15 @@ def create_sample_file():
         'STORE_NAME': ['Store1', 'Store2'],
         '1st Rcv Date': [datetime(2023, 1, 1), datetime(2023, 2, 1)],
         'DESIGN': ['Design1', 'Design2'],
+        'UPC':[1223456,345678],
         'Shop Rcv Qty': [100, 150],
         'Disp. Qty': [10, 20],
         'O.H Qty': [90, 130],
-        'Sold Qty': [50, 80]
+        'Sold Qty': [50, 80],
+        'Color':['Red','Blue'],
+        'Size':['Small','Medium'],
+        'Class':['Casual','Fancy'],
+        'SubClass':['Lawn','Chiffon']
     }
     df = pd.DataFrame(sample_data)
     output = BytesIO()
@@ -195,23 +200,27 @@ def main():
             filtered_data = filter_data(final_data, sell_through_threshold, days_threshold)
             transfer_details = process_transfer_details(filtered_data)
 
-            processed_data_bytes = to_excel(filtered_data)
-            transfer_data_bytes = to_excel(transfer_details)
+            st.session_state.filtered_data = filtered_data
+            st.session_state.transfer_details = transfer_details
 
             st.dataframe(filtered_data)
 
-            st.download_button(
-                label="Download Processed Data",
-                data=processed_data_bytes,
-                file_name="processed_data.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
-            st.download_button(
-                label="Download Transfer Details",
-                data=transfer_data_bytes,
-                file_name="transfer_details.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
+    if 'filtered_data' in st.session_state and 'transfer_details' in st.session_state:
+        processed_data_bytes = to_excel(st.session_state.filtered_data)
+        transfer_data_bytes = to_excel(st.session_state.transfer_details)
+
+        st.download_button(
+            label="Download Processed Data",
+            data=processed_data_bytes,
+            file_name="processed_data.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        st.download_button(
+            label="Download Transfer Details",
+            data=transfer_data_bytes,
+            file_name="transfer_details.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
 
 if __name__ == "__main__":
     main()
