@@ -9,11 +9,16 @@ def create_sample_file():
     sample_data = {
         'DESIGN': ['Design1', 'Design2'],
         'STORE_NAME': ['Store1', 'Store2'],
-        '1st Rcv Date': [datetime(2023, 1, 1), datetime(2023, 1, 2)],
-        'Shop Rcv Qty': [100, 200],
+        '1st Rcv Date': [datetime(2023, 1, 1), datetime(2023, 2, 1)],
+        'UPC':[1223456,345678],
+        'Shop Rcv Qty': [100, 150],
         'Disp. Qty': [10, 20],
-        'O.H Qty': [50, 150],
-        'Sold Qty': [30, 70]
+        'O.H Qty': [90, 130],
+        'Sold Qty': [50, 80],
+        'Color':['Red','Blue'],
+        'Size':['Small','Medium'],
+        'Class':['Casual','Fancy'],
+        'SubClass':['Lawn','Chiffon']
     }
     sample_df = pd.DataFrame(sample_data)
 
@@ -165,8 +170,8 @@ def to_excel(df):
 
 def main():
     st.title('Network🌐')
-    
-    
+
+    # Download sample file
     sample_file = create_sample_file()
     st.download_button(
         label="Download Sample Excel File",
@@ -174,9 +179,9 @@ def main():
         file_name='sample_data.xlsx',
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
-    
+
     uploaded_file = st.file_uploader("Upload your Excel file", type=['xlsx'])
-    
+
     if uploaded_file is not None:
         threshold_date = st.date_input("Season Launch Date", min_value=datetime(2020, 1, 1), value=datetime.now())
         sell_through_threshold = st.number_input("Enter Sell-Through Threshold (%)", min_value=0, max_value=100, value=60)
@@ -200,23 +205,28 @@ def main():
             filtered_data = filter_data(final_data, sell_through_threshold, days_threshold)
             transfer_details = process_transfer_details(filtered_data)
 
-            processed_data_excel = to_excel(filtered_data)
-            transfer_data_excel = to_excel(transfer_details)
+            st.session_state.filtered_data = filtered_data
+            st.session_state.transfer_details = transfer_details
 
             st.dataframe(filtered_data)
 
-            st.download_button(
-                label="Download Processed Data",
-                data=processed_data_excel,
-                file_name="processed_data.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
-            st.download_button(
-                label="Download Transfer Details",
-                data=transfer_data_excel,
-                file_name="transfer_details.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
+    if 'filtered_data' in st.session_state and 'transfer_details' in st.session_state:
+        processed_data_excel = to_excel(st.session_state.filtered_data)
+        transfer_data_excel = to_excel(st.session_state.transfer_details)
+
+        st.download_button(
+            label="Download Processed Data",
+            data=processed_data_excel,
+            file_name="processed_data.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+        st.download_button(
+            label="Download Transfer Details",
+            data=transfer_data_excel,
+            file_name="transfer_details.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
 
 if __name__ == "__main__":
     main()
