@@ -19,11 +19,10 @@ def login():
             width: 60%;
             padding: 50px 120px 160px;
             max-width: 46rem;
-           position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         *, ::before, ::after {
             box-sizing: border-box;
@@ -53,18 +52,18 @@ def login():
         html {
             font-size: 1rem;
         .st-emotion-cache-1jmvea6 p {
-    word-break: break-word;
-    margin-bottom: 0px;
-    font-size: 14px;
-    color: white;
-}
-p, ol, ul, dl {
-    margin: 0px 0px 1rem;
-    padding: 0px;
-    font-size: 1rem;
-    font-weight: 400;
-    color: white;
-}
+            word-break: break-word;
+            margin-bottom: 0px;
+            font-size: 14px;
+            color: white;
+        }
+        p, ol, ul, dl {
+            margin: 0px 0px 1rem;
+            padding: 0px;
+            font-size: 1rem;
+            font-weight: 400;
+            color: white;
+        }
         }
         ::-webkit-scrollbar {
             background: transparent;
@@ -124,15 +123,15 @@ p, ol, ul, dl {
         .st-am {
             border-left-style: none;
         }
-                .st-bu {
-    line-height: 1.4;
-    color: white;
-}
+        .st-bu {
+            line-height: 1.4;
+            color: white;
+        }
         .st-emotion-cache-bm2z3a {
-        width: 100%;
-        overflow: auto;
-        background-image: linear-gradient(to left bottom, #010002, #201d2b, #303753, #375480, #2874ae);
-      }  
+            width: 100%;
+            overflow: auto;
+            background-image: linear-gradient(to left bottom, #010002, #201d2b, #303753, #375480, #2874ae);
+        }  
         </style>
     """, unsafe_allow_html=True)
     
@@ -144,7 +143,7 @@ p, ol, ul, dl {
     if st.button("Login"):
         if USER_CREDENTIALS.get(username) == password:
             st.session_state['logged_in'] = True
-            st.session_state.page = 'Home'
+            st.experimental_rerun()  # Immediately rerun the app to reflect the logged-in state
         else:
             st.error("Invalid username or password")
 
